@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	celeris "github.com/useceleris/sdk-go-client"
@@ -11,9 +12,10 @@ import (
 )
 
 func Example() {
+	// From trusted configuration, never from code.
 	signer, err := celerisserver.NewSigner(celerisserver.SignerOptions{
-		ClientID:      "your-client-id",
-		SigningSecret: "your-signing-secret", // from trusted configuration, never from code
+		ClientID:      os.Getenv("CELERIS_CLIENT_ID"),
+		SigningSecret: os.Getenv("CELERIS_SIGNING_SECRET"),
 	})
 
 	if err != nil {
