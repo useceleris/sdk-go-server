@@ -1,6 +1,4 @@
 github.com/coder/websocket v1.8.15 h1:6B2JPeOGlpff2Uz6vOEH1Vzpi0iUz20A+lPVhPHtNUA=
 github.com/coder/websocket v1.8.15/go.mod h1:NX3SzP+inril6yawo5CQXx8+fk145lPDC6pumgx0mVg=
-github.com/useceleris/sdk-go-client v0.1.0 h1:Tk5qaSG4b37GzBWFRvFvHvXS85aWBP/wtpDEQQ2nfMQ=
-github.com/useceleris/sdk-go-client v0.1.0/go.mod h1:OYa+Eocgb7wD91dAA73W4KEbSKcevG7YHgJEXq3yPNI=
 github.com/useceleris/sdk-go-client v1.0.0 h1:pJPD3CUGnp5LCcGKTkZl6M6vDq8GKRzncwNHOqrmBfc=
 github.com/useceleris/sdk-go-client v1.0.0/go.mod h1:OYa+Eocgb7wD91dAA73W4KEbSKcevG7YHgJEXq3yPNI=
