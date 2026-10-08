@@ -50,12 +50,12 @@ func TestRejectsAWrongSecretAndAnUnknownClientAsTransport(t *testing.T) {
 	}
 } // end function TestRejectsAWrongSecretAndAnUnknownClientAsTransport
 
-// D-001: the server accepts up to the observed 60-minute window against a
-// documented 60-second intent; recorded, not relied upon.
-func TestRejectsExpiredAndFutureClocksInsideTheObservedWindow(t *testing.T) {
+// D-001: the server accepts a signed timestamp that is at most 60 seconds old
+// and not in the future.
+func TestRejectsTimestampsOutsideTheSixtySecondWindow(t *testing.T) {
 	reference := uniqueChannelReference("window")
 
-	for _, offset := range []time.Duration{-61 * time.Minute, 5 * time.Minute} {
+	for _, offset := range []time.Duration{-61 * time.Second, -59 * time.Minute, 5 * time.Minute} {
 		options := signerOptions()
 		options.Clock = func() time.Time { return time.Now().Add(offset) }
 		channel := newChannel(t, qualificationClient(t, options, fixedClaims(allPermissionClaims(reference))), reference)
@@ -66,13 +66,13 @@ func TestRejectsExpiredAndFutureClocksInsideTheObservedWindow(t *testing.T) {
 	}
 
 	options := signerOptions()
-	options.Clock = func() time.Time { return time.Now().Add(-59 * time.Minute) }
-	stale := newChannel(t, qualificationClient(t, options, fixedClaims(allPermissionClaims(reference))), reference)
+	options.Clock = func() time.Time { return time.Now().Add(-30 * time.Second) }
+	recent := newChannel(t, qualificationClient(t, options, fixedClaims(allPermissionClaims(reference))), reference)
 
-	if err := stale.Connect(t.Context()); err != nil {
+	if err := recent.Connect(t.Context()); err != nil {
 		t.Fatal(err)
 	}
-} // end function TestRejectsExpiredAndFutureClocksInsideTheObservedWindow
+} // end function TestRejectsTimestampsOutsideTheSixtySecondWindow
 
 func TestEnforcesTheTokensChannelRestriction(t *testing.T) {
 	allowed := uniqueChannelReference("scope-allowed")
