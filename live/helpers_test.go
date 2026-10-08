@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/url"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -19,8 +18,6 @@ import (
 	celeris "github.com/useceleris/sdk-go-client"
 	celerisserver "github.com/useceleris/sdk-go-server"
 )
-
-var generatedMessageID = regexp.MustCompile("^[0-9a-f]{32}$")
 
 var channelCounter atomic.Int64
 

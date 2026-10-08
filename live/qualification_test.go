@@ -85,6 +85,8 @@ func TestEnforcesTheTokensChannelRestriction(t *testing.T) {
 	connectedChannel(t, allowed, fixedClaims(allPermissionClaims(allowed)))
 } // end function TestEnforcesTheTokensChannelRestriction
 
+// The message id is the caller's own, so this suite does not depend on how the
+// client generates ids; the client's own suite checks those.
 func TestRoundTripsAPayloadWithItsIDAndNoSelfEcho(t *testing.T) {
 	reference := uniqueChannelReference("msg")
 	claims := fixedClaims(allPermissionClaims(reference))
@@ -96,13 +98,15 @@ func TestRoundTripsAPayloadWithItsIDAndNoSelfEcho(t *testing.T) {
 	subscribe(t, segment(t, receiver, "chat"))
 	time.Sleep(1500 * time.Millisecond)
 
-	if err := segment(t, publisher, "chat").Publish(t.Context(), []byte("hello-서버")); err != nil {
+	messageID := reference + "_hello"
+
+	if err := segment(t, publisher, "chat").PublishWithMessageID(t.Context(), []byte("hello-서버"), messageID); err != nil {
 		t.Fatal(err)
 	}
 
 	message := nextMessage(t, segment(t, receiver, "chat"), func(delivery) bool { return true }, "cross-connection delivery", 15*time.Second)
 
-	if !generatedMessageID.MatchString(message.metadata.MessageID) || string(message.payload) != "hello-서버" {
+	if message.metadata.MessageID != messageID || string(message.payload) != "hello-서버" {
 		t.Fatalf("delivery %+v", message)
 	}
 
