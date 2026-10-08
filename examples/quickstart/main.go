@@ -37,13 +37,13 @@ func claimsFor(_ context.Context, request celeris.CredentialRequest) (celerisser
 	}
 
 	return claims, nil
-}
+} // end function claimsFor
 
 func main() {
 	if err := run(context.Background()); err != nil {
 		log.Fatal(err)
 	}
-}
+} // end function main
 
 func run(ctx context.Context) error {
 	signer, err := celerisserver.NewSigner(celerisserver.SignerOptions{
@@ -124,4 +124,4 @@ func run(ctx context.Context) error {
 	fmt.Printf("example: ok delivered=%d\n", delivered.Load())
 
 	return nil
-}
+} // end function run

@@ -73,7 +73,7 @@ func appendTokenPayload(buffer []byte, timestamp int64, claims Claims) []byte {
 	buffer = strconv.AppendBool(buffer, claims.AllowEcho)
 
 	return append(buffer, '}')
-}
+} // end function appendTokenPayload
 
 func appendPermission(buffer []byte, read, write bool) []byte {
 	buffer = append(buffer, `"read":`...)
@@ -81,7 +81,7 @@ func appendPermission(buffer []byte, read, write bool) []byte {
 	buffer = append(buffer, `,"write":`...)
 
 	return strconv.AppendBool(buffer, write)
-}
+} // end function appendPermission
 
 // appendJSONString quotes text as JSON.stringify does: it escapes the quote,
 // the backslash and control characters below U+0020, and writes everything
@@ -119,4 +119,4 @@ func appendJSONString(buffer []byte, text string) []byte {
 	}
 
 	return append(buffer, '"')
-}
+} // end function appendJSONString

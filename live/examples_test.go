@@ -31,7 +31,7 @@ func exampleEnvironment(extra ...string) []string {
 	}
 
 	return append(environment, extra...)
-}
+} // end function exampleEnvironment
 
 func TestRunsTheQuickstart(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 2*time.Minute)
@@ -49,7 +49,7 @@ func TestRunsTheQuickstart(t *testing.T) {
 	if !regexp.MustCompile(`example: ok delivered=[1-9]\d*`).Match(output) {
 		t.Fatalf("output:\n%s", output)
 	}
-}
+} // end function TestRunsTheQuickstart
 
 // The credential endpoint authenticates and authorizes server-side, and its
 // credentials drive a real connection: the demo user reads "chat" but may not
@@ -130,7 +130,9 @@ func TestMintsCredentialsThroughTheEndpointAndConnectsWithThem(t *testing.T) {
 		t.Fatalf("unauthorized channel answered %d", status)
 	}
 
-	if status, _ := post("Bearer demo-session", map[string]any{"channelReference": "room-42", "padding": strings.Repeat("x", 4096)}); status != http.StatusBadRequest {
+	oversized := map[string]any{"channelReference": "room-42", "padding": strings.Repeat("x", 4096)}
+
+	if status, _ := post("Bearer demo-session", oversized); status != http.StatusBadRequest {
 		t.Fatalf("oversized request answered %d", status)
 	}
 
@@ -180,4 +182,4 @@ func TestMintsCredentialsThroughTheEndpointAndConnectsWithThem(t *testing.T) {
 	if reader.State() != celeris.StateConnected {
 		t.Fatalf("state %s", reader.State())
 	}
-}
+} // end function TestMintsCredentialsThroughTheEndpointAndConnectsWithThem

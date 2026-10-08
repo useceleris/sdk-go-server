@@ -58,7 +58,7 @@ func TestMain(m *testing.M) {
 
 	_ = probe.Close()
 	os.Exit(m.Run())
-}
+} // end function TestMain
 
 func loadEnvironment(path string) {
 	file, err := os.Open(path)
@@ -85,13 +85,15 @@ func loadEnvironment(path string) {
 			_ = os.Setenv(key, strings.Trim(strings.TrimSpace(value), `'"`))
 		}
 	}
-}
+} // end function loadEnvironment
 
-func websocketURL() string { return os.Getenv("CELERIS_WS_URL") }
+func websocketURL() string {
+	return os.Getenv("CELERIS_WS_URL")
+} // end function websocketURL
 
 func uniqueChannelReference(label string) string {
 	return "goqual-server-" + label + "-" + strconv.FormatInt(time.Now().UnixMilli(), 10) + "-" + strconv.FormatInt(channelCounter.Add(1), 10)
-}
+} // end function uniqueChannelReference
 
 // allPermissionClaims grants every segment of one channel.
 func allPermissionClaims(reference string) celerisserver.Claims {
@@ -99,12 +101,12 @@ func allPermissionClaims(reference string) celerisserver.Claims {
 		Channels:    celerisserver.RestrictedChannels(reference),
 		Permissions: celerisserver.AllSegments(true, true),
 	}
-}
+} // end function allPermissionClaims
 
 // signerOptions are the qualification credentials, which a test may change.
 func signerOptions() celerisserver.SignerOptions {
 	return celerisserver.SignerOptions{ClientID: os.Getenv("CELERIS_CLIENT_ID"), SigningSecret: os.Getenv("CELERIS_SIGNING_SECRET")}
-}
+} // end function signerOptions
 
 func qualificationClient(t *testing.T, options celerisserver.SignerOptions, claims celerisserver.ClaimsFunc) *celeris.Client {
 	t.Helper()
@@ -128,13 +130,13 @@ func qualificationClient(t *testing.T, options celerisserver.SignerOptions, clai
 	}
 
 	return client
-}
+} // end function qualificationClient
 
 func fixedClaims(claims celerisserver.Claims) celerisserver.ClaimsFunc {
 	return func(context.Context, celeris.CredentialRequest) (celerisserver.Claims, error) {
 		return claims, nil
 	}
-}
+} // end function fixedClaims
 
 func newChannel(t *testing.T, client *celeris.Client, reference string) *celeris.Channel {
 	t.Helper()
@@ -148,7 +150,7 @@ func newChannel(t *testing.T, client *celeris.Client, reference string) *celeris
 	t.Cleanup(channel.Close)
 
 	return channel
-}
+} // end function newChannel
 
 func connectedChannel(t *testing.T, reference string, claims celerisserver.ClaimsFunc) *celeris.Channel {
 	t.Helper()
@@ -160,7 +162,7 @@ func connectedChannel(t *testing.T, reference string, claims celerisserver.Claim
 	}
 
 	return channel
-}
+} // end function connectedChannel
 
 func segment(t *testing.T, channel *celeris.Channel, segmentID string) *celeris.Segment {
 	t.Helper()
@@ -172,7 +174,7 @@ func segment(t *testing.T, channel *celeris.Channel, segmentID string) *celeris.
 	}
 
 	return handle
-}
+} // end function segment
 
 func subscribe(t *testing.T, handle *celeris.Segment) {
 	t.Helper()
@@ -180,12 +182,12 @@ func subscribe(t *testing.T, handle *celeris.Segment) {
 	if _, err := handle.Subscribe(); err != nil {
 		t.Fatal(err)
 	}
-}
+} // end function subscribe
 
 type delivery struct {
 	payload  []byte
 	metadata celeris.MessageMetadata
-}
+} // end struct delivery
 
 func waitFor[Value any](t *testing.T, register func(func(Value)) func(), predicate func(Value) bool, description string, timeout time.Duration) Value {
 	t.Helper()
@@ -210,7 +212,7 @@ func waitFor[Value any](t *testing.T, register func(func(Value)) func(), predica
 
 		return zero
 	}
-}
+} // end function waitFor
 
 func nextMessage(t *testing.T, handle *celeris.Segment, predicate func(delivery) bool, description string, timeout time.Duration) delivery {
 	t.Helper()
@@ -218,7 +220,7 @@ func nextMessage(t *testing.T, handle *celeris.Segment, predicate func(delivery)
 	return waitFor(t, func(deliver func(delivery)) func() {
 		return handle.OnMessage(func(payload []byte, metadata celeris.MessageMetadata) { deliver(delivery{payload, metadata}) })
 	}, predicate, description, timeout)
-}
+} // end function nextMessage
 
 func serverErrorOfType(errorType celeris.ServerErrorType) func(error) bool {
 	return func(err error) bool {
@@ -226,4 +228,4 @@ func serverErrorOfType(errorType celeris.ServerErrorType) func(error) bool {
 
 		return ok && serverError.Type == errorType
 	}
-}
+} // end function serverErrorOfType

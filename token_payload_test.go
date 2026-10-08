@@ -39,4 +39,4 @@ func FuzzAppendJSONString(f *testing.F) {
 			t.Fatalf("%q quoted as %s", text, quoted)
 		}
 	})
-}
+} // end function FuzzAppendJSONString

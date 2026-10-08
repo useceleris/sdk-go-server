@@ -52,4 +52,4 @@ func NewCredentialProvider(signer *Signer, claims ClaimsFunc) (celeris.Credentia
 
 		return signer.Sign(signingClaims)
 	}, nil
-}
+} // end function NewCredentialProvider

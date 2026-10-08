@@ -41,7 +41,7 @@ func lifecycleServer(t *testing.T) (*httptest.Server, *atomic.Int64) {
 	t.Cleanup(server.Close)
 
 	return server, &handshakes
-}
+} // end function lifecycleServer
 
 func lifecycleChannel(t *testing.T, server *httptest.Server, claims ClaimsFunc) *celeris.Channel {
 	t.Helper()
@@ -73,7 +73,7 @@ func lifecycleChannel(t *testing.T, server *httptest.Server, claims ClaimsFunc) 
 	t.Cleanup(channel.Close)
 
 	return channel
-}
+} // end function lifecycleChannel
 
 func TestProviderConnectsTheRealClient(t *testing.T) {
 	server, handshakes := lifecycleServer(t)
@@ -84,7 +84,7 @@ func TestProviderConnectsTheRealClient(t *testing.T) {
 	if err := channel.Connect(t.Context()); err != nil || channel.State() != celeris.StateConnected || handshakes.Load() != 1 {
 		t.Fatalf("got %v, state %s, %d handshakes", err, channel.State(), handshakes.Load())
 	}
-}
+} // end function TestProviderConnectsTheRealClient
 
 func TestCloseDuringClaimsCancelsWithoutAHandshake(t *testing.T) {
 	server, handshakes := lifecycleServer(t)
@@ -112,7 +112,7 @@ func TestCloseDuringClaimsCancelsWithoutAHandshake(t *testing.T) {
 	if err := <-cancelled; err == nil || handshakes.Load() != 0 {
 		t.Fatalf("claims context %v, %d handshakes", err, handshakes.Load())
 	}
-}
+} // end function TestCloseDuringClaimsCancelsWithoutAHandshake
 
 func TestCallerCancellationDuringClaimsFailsWithoutASocket(t *testing.T) {
 	server, handshakes := lifecycleServer(t)
@@ -135,7 +135,7 @@ func TestCallerCancellationDuringClaimsFailsWithoutASocket(t *testing.T) {
 	if err := <-result; !errors.Is(err, celeris.ErrCancelled) || channel.State() != celeris.StateFailed || handshakes.Load() != 0 {
 		t.Fatalf("got %v, state %s, %d handshakes", err, channel.State(), handshakes.Load())
 	}
-}
+} // end function TestCallerCancellationDuringClaimsFailsWithoutASocket
 
 func TestClaimsFailureSurfacesOnlyAFixedSafeError(t *testing.T) {
 	server, _ := lifecycleServer(t)
@@ -148,10 +148,10 @@ func TestClaimsFailureSurfacesOnlyAFixedSafeError(t *testing.T) {
 	if !errors.Is(err, celeris.ErrTransport) || strings.Contains(err.Error(), "synthetic-secret") {
 		t.Fatalf("got %v", err)
 	}
-}
+} // end function TestClaimsFailureSurfacesOnlyAFixedSafeError
 
 type errorString string
 
 func (message errorString) Error() string {
 	return string(message)
-}
+} // end method Error

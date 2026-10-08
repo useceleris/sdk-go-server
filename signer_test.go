@@ -14,7 +14,7 @@ func scopedClaims() Claims {
 		Channels:    RestrictedChannels("room-1"),
 		Permissions: RestrictedSegments(SegmentClaim{SegmentID: "messages", Read: true}),
 	}
-}
+} // end function scopedClaims
 
 func fixedSigner(t *testing.T, clock func() time.Time) *Signer {
 	t.Helper()
@@ -26,7 +26,7 @@ func fixedSigner(t *testing.T, clock func() time.Time) *Signer {
 	}
 
 	return signer
-}
+} // end function fixedSigner
 
 func assertConfiguration(t *testing.T, err error, message string) {
 	t.Helper()
@@ -44,7 +44,7 @@ func assertConfiguration(t *testing.T, err error, message string) {
 	if errors.Unwrap(err) != nil {
 		t.Fatalf("error wraps a cause: %v", err)
 	}
-}
+} // end function assertConfiguration
 
 func TestSigningUsesAFreshTimestampEachTime(t *testing.T) {
 	timestamp := int64(123456789)
@@ -72,7 +72,7 @@ func TestSigningUsesAFreshTimestampEachTime(t *testing.T) {
 	if third, _ := signer.Sign(echo); third == second {
 		t.Fatal("changed claims signed the same")
 	}
-}
+} // end function TestSigningUsesAFreshTimestampEachTime
 
 func TestSignerOptionsAreValidated(t *testing.T) {
 	cases := []struct {
@@ -95,7 +95,7 @@ func TestSignerOptionsAreValidated(t *testing.T) {
 			t.Fatalf("error repeats the secret: %v", err)
 		}
 	}
-}
+} // end function TestSignerOptionsAreValidated
 
 func TestInvalidClaimsAreRefusedBeforeTheClockIsRead(t *testing.T) {
 	read := false
@@ -111,7 +111,7 @@ func TestInvalidClaimsAreRefusedBeforeTheClockIsRead(t *testing.T) {
 	if read {
 		t.Fatal("the clock was read for invalid claims")
 	}
-}
+} // end function TestInvalidClaimsAreRefusedBeforeTheClockIsRead
 
 func TestClockOutsideTheServersRangeIsRefused(t *testing.T) {
 	// Far beyond the range UnixMilli is defined for, which must not wrap into
@@ -126,7 +126,7 @@ func TestClockOutsideTheServersRangeIsRefused(t *testing.T) {
 	if _, err := fixedSigner(t, func() time.Time { return time.UnixMilli(253402300799999) }).Sign(scopedClaims()); err != nil {
 		t.Fatalf("latest timestamp refused: %v", err)
 	}
-}
+} // end function TestClockOutsideTheServersRangeIsRefused
 
 func TestSignerDefaultsToTheWallClock(t *testing.T) {
 	before := time.Now().UnixMilli()
@@ -139,7 +139,7 @@ func TestSignerDefaultsToTheWallClock(t *testing.T) {
 	if after := time.Now().UnixMilli(); after < before {
 		t.Fatal("clock went backwards")
 	}
-}
+} // end function TestSignerDefaultsToTheWallClock
 
 func TestCallerChangesAfterConstructionOrSigningChangeNothing(t *testing.T) {
 	references := []string{"room-1"}
@@ -162,4 +162,4 @@ func TestCallerChangesAfterConstructionOrSigningChangeNothing(t *testing.T) {
 	if after, _ := copied.Sign(claims); after != before {
 		t.Fatal("the signer shared the caller's options")
 	}
-}
+} // end function TestCallerChangesAfterConstructionOrSigningChangeNothing

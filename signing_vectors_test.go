@@ -19,12 +19,12 @@ type signingVector struct {
 	Timestamp     int64         `json:"timestamp"`
 	Claims        vectorClaims  `json:"claims"`
 	Expected      vectorPayload `json:"expected"`
-}
+} // end struct signingVector
 
 type vectorPayload struct {
 	Payload   string `json:"payload"`
 	Signature string `json:"signature"`
-}
+} // end struct vectorPayload
 
 // vectorClaims is the reference's claims shape, read from JSON.
 type vectorClaims struct {
@@ -45,7 +45,7 @@ type vectorClaims struct {
 	Reference string          `json:"reference"`
 	Replay    json.RawMessage `json:"replay"`
 	AllowEcho bool            `json:"allowEcho"`
-}
+} // end struct vectorClaims
 
 func (vector vectorClaims) claims(t *testing.T) Claims {
 	t.Helper()
@@ -85,7 +85,7 @@ func (vector vectorClaims) claims(t *testing.T) Claims {
 	}
 
 	return claims
-}
+} // end method claims
 
 func signingVectors(t *testing.T) []signingVector {
 	t.Helper()
@@ -109,7 +109,7 @@ func signingVectors(t *testing.T) []signingVector {
 	}
 
 	return append(vectors, reference...)
-}
+} // end function signingVectors
 
 func TestSignerMatchesIndependentVectors(t *testing.T) {
 	vectors := signingVectors(t)
@@ -141,7 +141,7 @@ func TestSignerMatchesIndependentVectors(t *testing.T) {
 			}
 		})
 	}
-}
+} // end function TestSignerMatchesIndependentVectors
 
 // The reference SDK's shared vectors, with the escapes vector the Python port
 // generated with the reference signer.

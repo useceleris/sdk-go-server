@@ -21,7 +21,7 @@ type user struct {
 	id        string
 	rooms     []string
 	moderator bool
-}
+} // end struct user
 
 // authenticate stands in for YOUR authentication: a session cookie, bearer
 // token or your framework's user. It never comes from the request body.
@@ -31,7 +31,7 @@ func authenticate(request *http.Request) (user, bool) {
 	}
 
 	return user{id: "user-8317", rooms: []string{"room-42"}}, true
-}
+} // end function authenticate
 
 // claimsFor decides scope on the server. A moderator may write; everyone
 // else reads.
@@ -48,7 +48,7 @@ func claimsFor(account user, channelReference string, replayLookbackMS int64) ce
 		// thirty seconds, whatever the client asked for.
 		Replay: celerisserver.ReplayLookback(time.Duration(min(max(replayLookbackMS, 0), 30_000)) * time.Millisecond),
 	}
-}
+} // end function claimsFor
 
 func main() {
 	signer, err := celerisserver.NewSigner(celerisserver.SignerOptions{
@@ -111,4 +111,4 @@ func main() {
 
 	log.Println("example: credential endpoint listening on", address)
 	log.Fatal(server.ListenAndServe())
-}
+} // end function main

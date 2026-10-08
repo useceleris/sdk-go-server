@@ -30,7 +30,7 @@ func TestConnectsWithServerSignedCredentials(t *testing.T) {
 	case <-time.After(15 * time.Second):
 		t.Fatal("no greeting")
 	}
-}
+} // end function TestConnectsWithServerSignedCredentials
 
 // DEV-02: a refused handshake is reported as a transport failure.
 func TestRejectsAWrongSecretAndAnUnknownClientAsTransport(t *testing.T) {
@@ -48,7 +48,7 @@ func TestRejectsAWrongSecretAndAnUnknownClientAsTransport(t *testing.T) {
 			t.Fatalf("got %v, state %s", err, channel.State())
 		}
 	}
-}
+} // end function TestRejectsAWrongSecretAndAnUnknownClientAsTransport
 
 // D-001: the server accepts up to the observed 60-minute window against a
 // documented 60-second intent; recorded, not relied upon.
@@ -72,7 +72,7 @@ func TestRejectsExpiredAndFutureClocksInsideTheObservedWindow(t *testing.T) {
 	if err := stale.Connect(t.Context()); err != nil {
 		t.Fatal(err)
 	}
-}
+} // end function TestRejectsExpiredAndFutureClocksInsideTheObservedWindow
 
 func TestEnforcesTheTokensChannelRestriction(t *testing.T) {
 	allowed := uniqueChannelReference("scope-allowed")
@@ -83,7 +83,7 @@ func TestEnforcesTheTokensChannelRestriction(t *testing.T) {
 	}
 
 	connectedChannel(t, allowed, fixedClaims(allPermissionClaims(allowed)))
-}
+} // end function TestEnforcesTheTokensChannelRestriction
 
 func TestRoundTripsAPayloadWithItsIDAndNoSelfEcho(t *testing.T) {
 	reference := uniqueChannelReference("msg")
@@ -111,7 +111,7 @@ func TestRoundTripsAPayloadWithItsIDAndNoSelfEcho(t *testing.T) {
 		t.Fatalf("publisher echoed %s without AllowEcho", identifier)
 	case <-time.After(1500 * time.Millisecond):
 	}
-}
+} // end function TestRoundTripsAPayloadWithItsIDAndNoSelfEcho
 
 func TestEchoesToThePublisherWhenClaimsAllowEcho(t *testing.T) {
 	reference := uniqueChannelReference("echo")
@@ -127,7 +127,7 @@ func TestEchoesToThePublisherWhenClaimsAllowEcho(t *testing.T) {
 	}
 
 	nextMessage(t, chat, func(message delivery) bool { return string(message.payload) == "self" }, "an echoed publish", 15*time.Second)
-}
+} // end function TestEchoesToThePublisherWhenClaimsAllowEcho
 
 func TestDeniesAReadOnlyRestrictedSegmentsPublish(t *testing.T) {
 	reference := uniqueChannelReference("perm")
@@ -148,7 +148,7 @@ func TestDeniesAReadOnlyRestrictedSegmentsPublish(t *testing.T) {
 	if !ok || serverError.SubType != "PUB" || serverError.Resource != "chat" || readOnly.State() != celeris.StateConnected {
 		t.Fatalf("denial %v", denial)
 	}
-}
+} // end function TestDeniesAReadOnlyRestrictedSegmentsPublish
 
 func TestReplaysRecentMessagesThroughReconnectClaims(t *testing.T) {
 	reference := uniqueChannelReference("replay")
@@ -162,6 +162,7 @@ func TestReplaysRecentMessagesThroughReconnectClaims(t *testing.T) {
 		liveIDs = append(liveIDs, metadata.MessageID)
 		mutex.Unlock()
 	})
+
 	subscribe(t, segment(t, liveReceiver, "history"))
 	time.Sleep(1500 * time.Millisecond)
 
@@ -175,6 +176,7 @@ func TestReplaysRecentMessagesThroughReconnectClaims(t *testing.T) {
 
 		return len(liveIDs) >= 3
 	}, "the three live deliveries", 20*time.Second)
+
 	liveReceiver.Close()
 
 	// The claims function applies the request's replay lookback, or a minute
@@ -198,6 +200,7 @@ func TestReplaysRecentMessagesThroughReconnectClaims(t *testing.T) {
 		replayed[string(payload)] = metadata.MessageID
 		mutex.Unlock()
 	})
+
 	subscribe(t, history)
 	nextMessage(t, history, func(delivery) bool {
 		mutex.Lock()
@@ -214,7 +217,7 @@ func TestReplaysRecentMessagesThroughReconnectClaims(t *testing.T) {
 			t.Fatalf("%s replayed as %q, live id %q", body, replayed[body], liveIDs[index])
 		}
 	}
-}
+} // end function TestReplaysRecentMessagesThroughReconnectClaims
 
 func TestSurfacesPresenceForAServerSignedReference(t *testing.T) {
 	reference := uniqueChannelReference("presence")
@@ -255,4 +258,4 @@ func TestSurfacesPresenceForAServerSignedReference(t *testing.T) {
 	if page.Total < 1 || !found {
 		t.Fatalf("page %+v", page)
 	}
-}
+} // end function TestSurfacesPresenceForAServerSignedReference

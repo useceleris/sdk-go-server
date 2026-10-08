@@ -39,7 +39,7 @@ func Example() {
 	// Return them from your credential endpoint as JSON:
 	// {"payload": "...", "signature": "..."}.
 	_ = credentials
-}
+} // end function Example
 
 // A backend that consumes realtime itself signs fresh claims for every
 // connection attempt.
@@ -71,7 +71,7 @@ func ExampleNewCredentialProvider() {
 	}
 
 	_ = client
-}
+} // end function ExampleNewCredentialProvider
 
 // Invalid claims name each field and rule, never the value.
 func ExampleSigner_Sign() {
@@ -89,4 +89,4 @@ func ExampleSigner_Sign() {
 
 	fmt.Println(err)
 	// Output: Invalid claims. Channels.References: Must not repeat a channel reference. Reference: Must not contain a colon, CR or LF.
-}
+} // end function ExampleSigner_Sign

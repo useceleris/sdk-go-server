@@ -20,7 +20,7 @@ func countingSigner(t *testing.T) (*Signer, *atomic.Int64) {
 	var reads atomic.Int64
 
 	return fixedSigner(t, func() time.Time { return time.UnixMilli(1_000 + reads.Add(1)) }), &reads
-}
+} // end function countingSigner
 
 func decodedPayload(t *testing.T, credentials celeris.Credentials) string {
 	t.Helper()
@@ -32,7 +32,7 @@ func decodedPayload(t *testing.T, credentials celeris.Credentials) string {
 	}
 
 	return string(decoded)
-}
+} // end function decodedPayload
 
 func TestProviderCallsClaimsAndSignsAfreshEachAttempt(t *testing.T) {
 	signer, reads := countingSigner(t)
@@ -58,7 +58,7 @@ func TestProviderCallsClaimsAndSignsAfreshEachAttempt(t *testing.T) {
 	if first == second || calls.Load() != 2 || reads.Load() != 2 {
 		t.Fatalf("calls %d, reads %d", calls.Load(), reads.Load())
 	}
-}
+} // end function TestProviderCallsClaimsAndSignsAfreshEachAttempt
 
 func TestClaimsDecideReplayFromTheReconnectRequest(t *testing.T) {
 	signer, _ := countingSigner(t)
@@ -81,7 +81,7 @@ func TestClaimsDecideReplayFromTheReconnectRequest(t *testing.T) {
 			t.Fatalf("payload %s, want %s", payload, replay)
 		}
 	}
-}
+} // end function TestClaimsDecideReplayFromTheReconnectRequest
 
 func TestProviderWithADoneContextNeitherCallsClaimsNorSigns(t *testing.T) {
 	signer, reads := countingSigner(t)
@@ -98,7 +98,7 @@ func TestProviderWithADoneContextNeitherCallsClaimsNorSigns(t *testing.T) {
 	if _, err := provider(ctx, celeris.CredentialRequest{}); !errors.Is(err, context.Canceled) || calls.Load() != 0 || reads.Load() != 0 {
 		t.Fatalf("got %v, calls %d, reads %d", err, calls.Load(), reads.Load())
 	}
-}
+} // end function TestProviderWithADoneContextNeitherCallsClaimsNorSigns
 
 func TestCancellationDuringClaimsPreventsSigning(t *testing.T) {
 	signer, reads := countingSigner(t)
@@ -112,7 +112,7 @@ func TestCancellationDuringClaimsPreventsSigning(t *testing.T) {
 	if _, err := provider(ctx, celeris.CredentialRequest{}); !errors.Is(err, context.Canceled) || reads.Load() != 0 {
 		t.Fatalf("got %v, reads %d", err, reads.Load())
 	}
-}
+} // end function TestCancellationDuringClaimsPreventsSigning
 
 func TestClaimsErrorPassesThroughWithoutSigning(t *testing.T) {
 	signer, reads := countingSigner(t)
@@ -124,7 +124,7 @@ func TestClaimsErrorPassesThroughWithoutSigning(t *testing.T) {
 	if _, err := provider(t.Context(), celeris.CredentialRequest{}); !errors.Is(err, failure) || reads.Load() != 0 {
 		t.Fatalf("got %v, reads %d", err, reads.Load())
 	}
-}
+} // end function TestClaimsErrorPassesThroughWithoutSigning
 
 func TestRequestFieldsNeverWidenTheClaims(t *testing.T) {
 	signer, _ := countingSigner(t)
@@ -141,7 +141,7 @@ func TestRequestFieldsNeverWidenTheClaims(t *testing.T) {
 	if payload := decodedPayload(t, credentials); strings.Contains(payload, "admin-room") || !strings.Contains(payload, `"replay":false`) {
 		t.Fatalf("payload %s", payload)
 	}
-}
+} // end function TestRequestFieldsNeverWidenTheClaims
 
 func TestInvalidClaimsFromTheCallbackAreAConfigurationError(t *testing.T) {
 	signer, _ := countingSigner(t)
@@ -151,9 +151,9 @@ func TestInvalidClaimsFromTheCallbackAreAConfigurationError(t *testing.T) {
 
 	_, err := provider(t.Context(), celeris.CredentialRequest{})
 	assertConfiguration(t, err, "Invalid claims. Channels: Required. Permissions: Required.")
-}
+} // end function TestInvalidClaimsFromTheCallbackAreAConfigurationError
 
 func TestProviderNeedsASignerAndClaims(t *testing.T) {
 	_, err := NewCredentialProvider(nil, nil)
 	assertConfiguration(t, err, "Invalid credential provider options. Signer: Required. Claims: Required.")
-}
+} // end function TestProviderNeedsASignerAndClaims

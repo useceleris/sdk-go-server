@@ -24,7 +24,7 @@ func validateSignerOptions(options SignerOptions) error {
 	}
 
 	return configurationError("signer options", failures)
-}
+} // end function validateSignerOptions
 
 func validateClaims(claims Claims) error {
 	var failures []string
@@ -61,7 +61,7 @@ func validateClaims(claims Claims) error {
 	}
 
 	return configurationError("claims", failures)
-}
+} // end function validateClaims
 
 func channelReferenceFailures(references []string) []string {
 	if len(references) == 0 {
@@ -84,7 +84,7 @@ func channelReferenceFailures(references []string) []string {
 	}
 
 	return failures
-}
+} // end function channelReferenceFailures
 
 func segmentFailures(segments []SegmentClaim) []string {
 	var failures []string
@@ -103,7 +103,7 @@ func segmentFailures(segments []SegmentClaim) []string {
 	}
 
 	return failures
-}
+} // end function segmentFailures
 
 func textRule(text string) string {
 	if text == "" {
@@ -115,7 +115,7 @@ func textRule(text string) string {
 	}
 
 	return ""
-}
+} // end function textRule
 
 func identifierRule(identifier string) string {
 	if rule := textRule(identifier); rule != "" {
@@ -127,7 +127,7 @@ func identifierRule(identifier string) string {
 	}
 
 	return ""
-}
+} // end function identifierRule
 
 func colonFreeIdentifierRule(identifier string) string {
 	if rule := textRule(identifier); rule != "" {
@@ -139,7 +139,7 @@ func colonFreeIdentifierRule(identifier string) string {
 	}
 
 	return ""
-}
+} // end function colonFreeIdentifierRule
 
 func channelReferenceRule(reference string) string {
 	if reference == "" {
@@ -161,12 +161,12 @@ func channelReferenceRule(reference string) string {
 	}
 
 	return ""
-}
+} // end function channelReferenceRule
 
 // failure describes one failed field and the rule it broke, never its value.
 func failure(path, rule string) string {
 	return path + ": " + rule + "."
-}
+} // end function failure
 
 // configurationError names every failure, or returns nil when there is none.
 func configurationError(subject string, failures []string) error {
@@ -175,4 +175,4 @@ func configurationError(subject string, failures []string) error {
 	}
 
 	return &celeris.Error{Code: celeris.ErrConfiguration, Message: "Invalid " + subject + ". " + strings.Join(failures, " ")}
-}
+} // end function configurationError

@@ -38,4 +38,4 @@ func TestTheSigningSecretNeverPrints(t *testing.T) {
 	if strings.Contains(logged.String(), "synthetic-secret") {
 		t.Fatalf("slog printed %q", logged.String())
 	}
-}
+} // end function TestTheSigningSecretNeverPrints

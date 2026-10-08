@@ -35,7 +35,7 @@ func TestClaimsAreValidated(t *testing.T) {
 	for _, test := range cases {
 		assertConfiguration(t, validateClaims(test.claims), test.message)
 	}
-}
+} // end function TestClaimsAreValidated
 
 func TestValidClaimsAcrossTheirRange(t *testing.T) {
 	valid := []Claims{
@@ -51,7 +51,7 @@ func TestValidClaimsAcrossTheirRange(t *testing.T) {
 			t.Errorf("claims %d refused: %v", index, err)
 		}
 	}
-}
+} // end function TestValidClaimsAcrossTheirRange
 
 func TestTokenPayloadLayout(t *testing.T) {
 	cases := []struct {
@@ -77,7 +77,7 @@ func TestTokenPayloadLayout(t *testing.T) {
 			t.Errorf("payload %s, want %s", got, test.json)
 		}
 	}
-}
+} // end function TestTokenPayloadLayout
 
 func TestChannelReferenceCharacterClassEdges(t *testing.T) {
 	if rule := channelReferenceRule("azAZ09-_"); rule != "" {
@@ -89,4 +89,4 @@ func TestChannelReferenceCharacterClassEdges(t *testing.T) {
 			t.Errorf("%q accepted", character)
 		}
 	}
-}
+} // end function TestChannelReferenceCharacterClassEdges

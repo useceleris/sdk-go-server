@@ -72,7 +72,7 @@ func packageFiles(t *testing.T) map[string]*ast.File {
 	}
 
 	return files
-}
+} // end function packageFiles
 
 func TestExportedSurfaceIsPinned(t *testing.T) {
 	var surface []string
@@ -127,7 +127,7 @@ func TestExportedSurfaceIsPinned(t *testing.T) {
 	if !slices.Equal(surface, exportedSurface) {
 		t.Fatalf("exported surface changed:\n%s", strings.Join(surface, "\n"))
 	}
-}
+} // end function TestExportedSurfaceIsPinned
 
 // The signing secret never leaves a trusted server: the package has no way to
 // print or log, and starts no work when imported.
@@ -143,7 +143,10 @@ func TestPackageNeitherPrintsNorStartsWorkAtImport(t *testing.T) {
 				if packageName, ok := node.X.(*ast.Ident); ok {
 					call := packageName.Name + "." + node.Sel.Name
 
-					if packageName.Name == "log" || strings.HasPrefix(call, "fmt.Print") || strings.HasPrefix(call, "fmt.Fprint") || strings.HasPrefix(call, "fmt.Sprint") || call == "os.Stdout" || call == "os.Stderr" || packageName.Name == "slog" && node.Sel.Name != "Value" && node.Sel.Name != "StringValue" {
+					prints := strings.HasPrefix(call, "fmt.Print") || strings.HasPrefix(call, "fmt.Fprint") || strings.HasPrefix(call, "fmt.Sprint") || call == "os.Stdout" || call == "os.Stderr"
+					logs := packageName.Name == "log" || packageName.Name == "slog" && node.Sel.Name != "Value" && node.Sel.Name != "StringValue"
+
+					if prints || logs {
 						t.Errorf("%s uses %s", path, call)
 					}
 				}
@@ -156,4 +159,4 @@ func TestPackageNeitherPrintsNorStartsWorkAtImport(t *testing.T) {
 			return true
 		})
 	}
-}
+} // end function TestPackageNeitherPrintsNorStartsWorkAtImport

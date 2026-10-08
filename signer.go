@@ -28,23 +28,23 @@ type SignerOptions struct {
 
 	// Clock returns the time credentials are signed at. Nil means time.Now.
 	Clock func() time.Time
-}
+} // end struct SignerOptions
 
 const redactedSignerOptions = "celerisserver.SignerOptions{redacted}"
 
 func (SignerOptions) String() string {
 	return redactedSignerOptions
-}
+} // end method String
 
 // Format redacts the options for every fmt verb.
 func (SignerOptions) Format(state fmt.State, _ rune) {
 	_, _ = io.WriteString(state, redactedSignerOptions)
-}
+} // end method Format
 
 // LogValue redacts the options in [slog] output.
 func (SignerOptions) LogValue() slog.Value {
 	return slog.StringValue("redacted")
-}
+} // end method LogValue
 
 // Signer mints credentials on a trusted server. It keeps the signing secret
 // only inside the digest it computes, so printing a Signer, even field by
@@ -53,7 +53,7 @@ type Signer struct {
 	clientID string
 	digest   func(message []byte) []byte
 	clock    func() time.Time
-}
+} // end struct Signer
 
 // NewSigner validates options and returns a signer. It fails with
 // [celeris.ErrConfiguration], naming the field and rule but never the value.
@@ -71,14 +71,14 @@ func NewSigner(options SignerOptions) (*Signer, error) {
 	key := []byte(options.SigningSecret)
 
 	digest := func(message []byte) []byte {
-		mac := hmac.New(sha512.New, key)
-		mac.Write(message)
+		keyedHash := hmac.New(sha512.New, key)
+		keyedHash.Write(message)
 
-		return mac.Sum(nil)
+		return keyedHash.Sum(nil)
 	}
 
 	return &Signer{clientID: options.ClientID, digest: digest, clock: clock}, nil
-}
+} // end function NewSigner
 
 // Sign mints credentials for claims, timestamped now. Sign fresh for every
 // connection attempt; never cache or reuse credentials (D-001). It fails with
@@ -106,4 +106,4 @@ func (signer *Signer) Sign(claims Claims) (celeris.Credentials, error) {
 	signature := base64.StdEncoding.EncodeToString([]byte(signer.clientID + ":" + digest))
 
 	return celeris.Credentials{Payload: payload, Signature: signature}, nil
-}
+} // end method Sign
